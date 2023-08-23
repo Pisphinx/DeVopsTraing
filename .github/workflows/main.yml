@@ -1,0 +1,39 @@
+name: workflow_dispatch
+
+# Contrôle quand le flux de travail sera déclenché
+on:
+  # Déclenche le flux de travail lors d'événements de push ou de demande d'extraction, mais uniquement pour la branche "main"
+  push:
+    branches:
+      - main
+  # Permet de déclencher le flux de travail manuellement depuis l'interface utilisateur GitHub
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      # Étapes pour la construction
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Ajoutez ici d'autres étapes nécessaires pour votre processus de construction
+
+  deploy:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        include:
+          - env: d
+          - env: i
+    environment:
+      name: ${{ matrix.env }}
+      
+    steps:
+      # Étapes pour le déploiement
+      - name: Write text
+        run: echo "Env: ${{ matrix.env }}"
+        env:
+          RG: azr${{ matrix.env }}rgxops
+          sqlserver: azr${{ matrix.env }}sqlserverxops
